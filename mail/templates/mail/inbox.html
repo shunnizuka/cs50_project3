@@ -15,6 +15,7 @@
     </div>
 
     <div id="compose-view">
+        <div id="alert"></div>
         <h3>New Email</h3>
         <form id="compose-form">
             <div class="form-group">
@@ -34,4 +35,5 @@
 
 {% block script %}
     <script src="{% static 'mail/inbox.js' %}"></script>
+    <script src="{% static 'mail/compose.js' %}"></script>
 {% endblock %}
