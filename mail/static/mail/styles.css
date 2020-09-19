@@ -2,7 +2,11 @@ textarea {
     min-height: 400px;
 }
 
-.row {
+p {
+    margin-bottom: 5px;
+}
+
+.emailRow {
     min-width: 600px;
     flex-wrap: nowrap;
     background-color: white;
@@ -11,6 +15,8 @@ textarea {
     border-width: thin;
     border-radius: 5px;
     border-color: darkslategray;
+    display: flex;
+    width:100%;
 }
 
 .emailContentCol {
@@ -20,4 +26,6 @@ textarea {
     max-width: 600px;
     min-width: 50%;
     padding: 0px 15px;
+    text-align: start;
+
 }
