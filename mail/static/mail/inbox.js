@@ -64,6 +64,7 @@ function fetch_email(mailbox) {
  * Create email element to be displayed in the mail-box
  */
 function create_email(email, mailbox) {
+  const parentDiv = document.querySelector('#emails-view');
   const emailRow = document.createElement('button');
   emailRow.addEventListener('click', () => {
     view_email(email.id, mailbox);
@@ -97,7 +98,7 @@ function create_email(email, mailbox) {
   emailColTime.innerHTML = email.timestamp;
 
   emailRow.append(emailColSender, emailColContent, emailColTime);
-  document.querySelector('#emails-view').append(emailRow);
+  parentDiv.append(emailRow);
 }
 
 /**
@@ -141,5 +142,38 @@ function view_email(email_id, mailbox) {
       emailContent.querySelector('#time-field').innerHTML =
         '<strong>Timestamp: </strong>' + email.timestamp;
       emailContent.querySelector('#body-field').innerHTML = email.body;
+
+      // Allow user to archive emails in inbox
+      const btnDiv = emailContent.querySelector('#buttons');
+      btnDiv.innerHTML = '';
+      const archiveBtn = document.createElement('button');
+      btnDiv.append(archiveBtn);
+      archiveBtn.className = 'btn btn-primary';
+      if (mailbox === 'inbox') {
+        archiveBtn.innerHTML = 'Archive';
+      } else if (mailbox === 'archive') {
+        archiveBtn.innerHTML = 'Unarchive';
+      }
+      archiveBtn.addEventListener('click', () => {
+        addOrRemoveFromArchived(email.id, !email.archived);
+      });
     });
+}
+
+/**
+ * Sends a PUT request to /emails/<email_id> API to update the archived field of the email
+ * Add to archive: set toArchive as true
+ * Remove from archive: set toAtchive as false
+ */
+function addOrRemoveFromArchived(email_id, toArchive) {
+  fetch(`/emails/${email_id}`, {
+    method: 'PUT',
+    body: JSON.stringify({
+      archived: toArchive
+    })
+  }).then(response => {
+    if (response.status === 204) {
+      load_mailbox('inbox');
+    }
+  });
 }
