@@ -23,7 +23,11 @@ class Email(models.Model):
             "recipients": [user.email for user in self.recipients.all()],
             "subject": self.subject,
             "body": self.body,
-            "timestamp": self.timestamp.strftime("%b %-d %Y, %-I:%M %p"),
+            #Original format %-d and %-I causes invalid string format error
+            "timestamp": self.timestamp.strftime("%b %d %Y, %I:%M %p"),  
             "read": self.read,
             "archived": self.archived
         }
+
+    def __str__(self):
+        return f"sender: {self.sender}, subject: {self.subject}, body: {self.body}"
