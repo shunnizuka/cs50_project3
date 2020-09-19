@@ -66,7 +66,15 @@ function create_email(email, mailbox) {
 
   const emailColSender = document.createElement('div');
   emailColSender.className = 'col-3';
-  emailColSender.innerHTML = email.sender;
+  if(mailbox === 'sent') {
+    var recipientsString = 'To: ';
+    email.recipients.forEach(recipient => {
+      recipientsString += recipient + ', '
+    })
+    emailColSender.innerHTML = recipientsString.substring(0, recipientsString.length - 2); // to remove the last ', '
+  } else {
+    emailColSender.innerHTML = email.sender;
+  }
 
   const emailColContent = document.createElement('div');
   emailColContent.className = 'emailContentCol';
