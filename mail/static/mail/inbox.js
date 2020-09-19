@@ -146,17 +146,30 @@ function view_email(email_id, mailbox) {
       // Allow user to archive emails in inbox
       const btnDiv = emailContent.querySelector('#buttons');
       btnDiv.innerHTML = '';
-      const archiveBtn = document.createElement('button');
-      btnDiv.append(archiveBtn);
-      archiveBtn.className = 'btn btn-primary';
-      if (mailbox === 'inbox') {
-        archiveBtn.innerHTML = 'Archive';
-      } else if (mailbox === 'archive') {
-        archiveBtn.innerHTML = 'Unarchive';
+
+      if (mailbox !== 'sent') {
+
+        const archiveBtn = document.createElement('button');
+        btnDiv.append(archiveBtn);
+        archiveBtn.className = 'btn btn-primary';
+        if (mailbox === 'inbox') {
+          archiveBtn.innerHTML = 'Archive';
+        } else if (mailbox === 'archive') {
+          archiveBtn.innerHTML = 'Unarchive';
+        }
+        archiveBtn.addEventListener('click', () => {
+          addOrRemoveFromArchived(email.id, !email.archived);
+        });
+
+        const replyBtn = document.createElement('button');
+        btnDiv.append(replyBtn);
+        replyBtn.className = 'btn btn-primary';
+        replyBtn.innerHTML = 'Reply'
+        replyBtn.style = 'margin-left: 15px;'
+        replyBtn.addEventListener('click', () => {
+          reply_email(email);
+        });
       }
-      archiveBtn.addEventListener('click', () => {
-        addOrRemoveFromArchived(email.id, !email.archived);
-      });
     });
 }
 
@@ -176,4 +189,18 @@ function addOrRemoveFromArchived(email_id, toArchive) {
       load_mailbox('inbox');
     }
   });
+}
+
+function reply_email(email) {
+  // Show compose view and hide other views
+  document.querySelector('#emails-view').style.display = 'none';
+  document.querySelector('#email-content').style.display = 'none';
+  document.querySelector('#compose-view').style.display = 'block';
+  document.querySelector('#alert').innerHTML = '';
+  document.querySelector('#alert').className = '';
+
+  // prefill the composition fields
+  document.querySelector('#compose-recipients').value = email.sender;
+  document.querySelector('#compose-subject').value = `Re: ${email.subject}`;
+  document.querySelector('#compose-body').value = `On ${email.timestamp} ${email.sender} wrote: ${email.body}`;
 }
