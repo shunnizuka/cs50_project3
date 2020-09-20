@@ -148,7 +148,6 @@ function view_email(email_id, mailbox) {
       btnDiv.innerHTML = '';
 
       if (mailbox !== 'sent') {
-
         const archiveBtn = document.createElement('button');
         btnDiv.append(archiveBtn);
         archiveBtn.className = 'btn btn-primary';
@@ -164,8 +163,8 @@ function view_email(email_id, mailbox) {
         const replyBtn = document.createElement('button');
         btnDiv.append(replyBtn);
         replyBtn.className = 'btn btn-primary';
-        replyBtn.innerHTML = 'Reply'
-        replyBtn.style = 'margin-left: 15px;'
+        replyBtn.innerHTML = 'Reply';
+        replyBtn.style = 'margin-left: 15px;';
         replyBtn.addEventListener('click', () => {
           reply_email(email);
         });
@@ -201,6 +200,12 @@ function reply_email(email) {
 
   // prefill the composition fields
   document.querySelector('#compose-recipients').value = email.sender;
-  document.querySelector('#compose-subject').value = `Re: ${email.subject}`;
-  document.querySelector('#compose-body').value = `On ${email.timestamp} ${email.sender} wrote: ${email.body}`;
+  if (email.subject.includes('Re:')) {
+    document.querySelector('#compose-subject').value = email.subject;
+  } else {
+    document.querySelector('#compose-subject').value = `Re: ${email.subject}`;
+  }
+  document.querySelector(
+    '#compose-body'
+  ).value = `<em><font color='gray'>On ${email.timestamp} ${email.sender} wrote:\n ${email.body}</em></font>\n`;
 }
